@@ -1,20 +1,9 @@
-import { useMemo, type Dispatch } from "react"
-import type { Activity } from "../types"
-import { categories } from "../data/categories"
 import { PencilSquareIcon, XCircleIcon } from '@heroicons/react/24/outline'
-import type { ActivityActions } from "../reducers/activityReducer"
+import { useActivity } from "../hooks/useActivity"
 
-type ActivityListProps = {
-    activities?: Activity[]
-    dispatch: Dispatch<ActivityActions>
-}
+const ActivityList = () => {
 
-const ActivityList = ({ activities, dispatch }: ActivityListProps) => {
-    const categoryName = useMemo(() => 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        (category: Activity['category']) => categories.map(cat => cat.id === category ? cat.name : ''), [activities])
-
-    const isEmptyActivities = useMemo(() => activities?.length === 0, [activities]);
+    const {state, dispatch, categoryName, isEmptyActivities} = useActivity()
 
   return (
     <>
@@ -23,7 +12,7 @@ const ActivityList = ({ activities, dispatch }: ActivityListProps) => {
             isEmptyActivities ? (
                 <p className="text-center mt-10 text-gray-500">No activities added yet.</p>
             ) : (
-                activities?.map(activity => (
+                state.activities?.map(activity => (
                 <div key={activity.id} className="px-5 py-10 bg-white mt-5 flex justify-between shadow">
                     <div className="space-y-2 relative">
                         <p className={`absolute -top-8 -left-8 px-10 py-2 text-white uppercase font-bold ${activity.category === 1 ? 'bg-lime-500' : 'bg-orange-500'}`}>
